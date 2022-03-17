@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,27 @@ namespace MvcDonativosMetricas
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddLogging(options =>
+            //{
+            //    options.AddConsole();
+            //    options.SetMinimumLevel(LogLevel.Debug);
+            //});
+
+            string key =
+                this.Configuration.GetValue<string>
+                ("ApplicationInsights:ConnectionString");
+            services.AddLogging(options =>
+            {
+                options.AddConsole();
+                options.SetMinimumLevel(LogLevel.Trace);
+                //INDICAMOS QUE EL PROVEEDOR SERA INSIGHTS
+                options.AddFilter<ApplicationInsightsLoggerProvider>
+                ("", LogLevel.Trace);
+                //INCLUIMOS LA CLAVE EN EL LOGGER
+                options.AddApplicationInsights(key);
+            });
+
+
             services.AddControllersWithViews();
             services.AddApplicationInsightsTelemetry
                 (Configuration["APPINSIGHTS_CONNECTIONSTRING"]);

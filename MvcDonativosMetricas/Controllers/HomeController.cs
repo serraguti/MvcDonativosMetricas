@@ -25,12 +25,16 @@ namespace MvcDonativosMetricas.Controllers
 
         public IActionResult Index()
         {
+            this._logger.LogInformation(DateTime.Now.ToShortTimeString() 
+                + " Entrando a GET/Index");
             return View();
         }
 
         [HttpPost]
         public IActionResult Index(string nombre, int donativo)
         {
+            this._logger.LogInformation(DateTime.Now.ToShortTimeString()
+                + " Entrando a POST/Index");
             ViewData["MENSAJE"] = "Su donativo de " + donativo
                 + " ha sido aceptado.  Muchas gracias Sr/Sra " + nombre;
             this.telemetryClient.TrackEvent("DonativosRequest");
@@ -70,6 +74,8 @@ namespace MvcDonativosMetricas.Controllers
 
         public IActionResult Privacy()
         {
+            this._logger.LogInformation(DateTime.Now.ToShortTimeString()
+                + " Entrando a GET/Privacy");
             return View();
         }
 
